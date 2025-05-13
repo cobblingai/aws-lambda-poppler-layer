@@ -24,7 +24,15 @@ WORKDIR /tmp
 RUN set -xe \
     && yum makecache \
     && yum groupinstall -y "Development Tools"  --setopt=group_package_types=mandatory,default \
-    && yum install -y python3-devel openssl-devel gcc10 gcc10-c++
+    && yum install -y \
+    python3-devel \
+    python3-pip \
+    openssl-devel \
+    gcc10 \
+    gcc10-c++ \
+    pkgconfig \
+    glib2-devel \
+    libffi-devel
 
 # Install CMake
 

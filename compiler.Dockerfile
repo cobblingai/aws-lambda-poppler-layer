@@ -1,4 +1,4 @@
-FROM amazonlinux:2
+FROM amazonlinux:2023
 
 SHELL ["/bin/bash", "-c"]
 
@@ -22,15 +22,24 @@ RUN mkdir -p ${BUILD_DIR}  \
 WORKDIR /tmp
 
 RUN set -xe \
-    && yum makecache \
-    && yum groupinstall -y "Development Tools"  --setopt=group_package_types=mandatory,default \
-    && yum install -y \
+    && dnf makecache \
+    && dnf groupinstall -y "Development Tools"  --setopt=group_package_types=mandatory,default \
+    && dnf install -y \
     python3-devel \
     python3-pip \
     openssl-devel \
-    gcc10 \
-    gcc10-c++ \
+    gcc \
+    gcc-c++ \
     pkgconfig \
+    flex \
+    bison \
+    cairo-devel \
+    cairo-gobject-devel \
+    python3-mako \
+    python3-markdown \
+    meson \
+    python3 \
+    gtk-doc \
     glib2-devel \
     libffi-devel
 

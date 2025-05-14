@@ -41,8 +41,8 @@ RUN set -xe \
     python3 \
     gtk-doc \
     glib2-devel \
-    libffi-devel
-    # gobject-introspection-devel
+    libffi-devel \
+    && dnf clean all && rm -rf /var/cache/dnf
 
 # Install CMake
 
@@ -88,10 +88,10 @@ ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${INSTALL_DIR}/lib/pkgconfig:${INS
 # Install Boost (https://github.com/boostorg/boost)
 
 RUN set -xe \
-    && cd /tmp \
-    && git clone --recursive https://github.com/boostorg/boost.git \
-    && cd boost \
-    && git checkout master \
+    && mkdir -p /tmp/boost \
+    && cd /tmp/boost \
+    && curl -Ls https://archives.boost.io/release/1.87.0/source/boost_1_88_0.tar.gz \
+    | tar xzC /tmp/boost --strip-components=1 \
     && ./bootstrap.sh \
     --prefix=/usr/local \
     --with-python=python3 \
@@ -454,3 +454,8 @@ RUN set -xe; \
     && make \
     && make install
 
+# Remove unnecessary files
+RUN rm -rf /opt/share/gtk-doc \
+    /opt/share/man \
+    /opt/share/doc \
+    /opt/lib*/cmake/*Test*

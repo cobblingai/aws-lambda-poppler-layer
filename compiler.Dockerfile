@@ -79,14 +79,14 @@ RUN  set -xe \
 # Install Boost (https://github.com/boostorg/boost)
 
 RUN set -xe \
-    && mkdir -p /tmp/boost \
-    && cd /tmp/boost \
-    && curl -Ls https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz \
-    | tar xzC /tmp/boost --strip-components=1 \
-    && sed -i '/#include.*phoenix.*tuple.hpp.*/d' boost/phoenix/stl.hpp \
+    && cd /tmp \
+    && git clone --recursive https://github.com/boostorg/boost.git \
+    && cd boost \
+    && git checkout master \
     && ./bootstrap.sh \
     --prefix=/usr/local \
     --with-python=python3 \
+    && ./b2 headers \
     && ./b2 stage -j8 \
     threading=multi \
     link=shared \

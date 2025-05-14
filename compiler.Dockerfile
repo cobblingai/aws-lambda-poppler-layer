@@ -129,8 +129,8 @@ WORKDIR  ${XML2_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure \
@@ -170,8 +170,8 @@ RUN set -xe; \
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -196,8 +196,8 @@ WORKDIR  ${GPERF_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -222,8 +222,8 @@ RUN set -xe; \
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     FONTCONFIG_PATH=${INSTALL_DIR} \
@@ -250,8 +250,8 @@ WORKDIR  ${LIBJPEG_BUILD_DIR}/bin/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     cmake .. \
@@ -277,8 +277,8 @@ WORKDIR  ${OPENJPEG2_BUILD_DIR}/bin/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     cmake .. \
@@ -303,8 +303,8 @@ WORKDIR  ${LIBPNG_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -327,8 +327,8 @@ WORKDIR  ${LIBTIFF_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -354,8 +354,8 @@ RUN set -xe; \
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -378,8 +378,8 @@ WORKDIR  ${CAIRO_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -403,8 +403,8 @@ WORKDIR  ${LCMS_BUILD_DIR}/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     ./configure  \
@@ -432,8 +432,8 @@ WORKDIR ${POPPLER_BUILD_DIR}/bin/
 
 RUN set -xe; \
     CFLAGS="" \
-    CC="/usr/bin/gcc10-gcc" \
-    CXX="/usr/bin/gcc10-c++" \
+    # CC="/usr/bin/gcc10-gcc" \
+    # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
     cmake .. \

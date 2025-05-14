@@ -42,6 +42,7 @@ RUN set -xe \
     gtk-doc \
     glib2-devel \
     libffi-devel
+    # gobject-introspection-devel
 
 # Install CMake
 
@@ -75,6 +76,14 @@ RUN  set -xe \
     .. \
     && ninja \
     && ninja install
+
+# … after ninja install for G-I …
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/usr_local_lib.conf \
+ && ldconfig
+
+# ensure pkg-config and CMake can find /usr/local installs
+ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/lib64/pkgconfig:$PKG_CONFIG_PATH" \
+    CMAKE_PREFIX_PATH="/usr/local:${INSTALL_DIR}"
 
 # Install Boost (https://github.com/boostorg/boost)
 

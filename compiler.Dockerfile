@@ -59,7 +59,7 @@ RUN  set -xe \
     | tar xzC /tmp/cmake --strip-components=1 \
     && sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake \
     && ./bootstrap \
-    --prefix=${INSTALL_DIR} \
+    --prefix=/usr/local \
     --no-system-jsoncpp \
     --no-system-librhash \
     --no-system-curl \
@@ -91,7 +91,7 @@ RUN set -xe \
     && curl -Ls https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz \
     | tar xzC /tmp/boost --strip-components=1 \
     && ./bootstrap.sh \
-    --prefix=${INSTALL_DIR} \
+    --prefix=/usr/local \
     --with-python=python3 \
     && ./b2 headers \
     && ./b2 stage -j8 \
@@ -433,7 +433,8 @@ RUN set -xe; \
 WORKDIR  ${HARFBUZZ_BUILD_DIR}/
 
 RUN set -xe; \
-    meson setup \
+    pip3 install ninja meson \
+    && meson setup \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
     .. \

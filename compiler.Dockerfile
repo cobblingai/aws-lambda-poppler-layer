@@ -441,7 +441,7 @@ RUN set -xe; \
     
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 
-ENV VERSION_POPPLER=23.06.0
+ENV VERSION_POPPLER=25.05.0
 ENV POPPLER_BUILD_DIR=${BUILD_DIR}/poppler
 ENV POPPLER_TEST_DIR=${BUILD_DIR}/poppler-test
 

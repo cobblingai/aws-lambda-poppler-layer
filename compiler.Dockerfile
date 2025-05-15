@@ -42,7 +42,6 @@ RUN set -xe \
     cairo-gobject-devel \
     python3-mako \
     python3-markdown \
-    meson \
     ninja-build \
     python3 \
     gtk-doc \
@@ -372,7 +371,8 @@ RUN set -xe; \
     # --disable-static \
     # && make \
     # && make install
-    meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
+    pip3 install ninja meson \
+    && meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
     && ninja \
     && ninja install
 
@@ -400,7 +400,8 @@ RUN set -xe; \
     # --enable-tee \
     # && make \
     # && make install
-    meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
+    pip3 install ninja meson \
+    && meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
     && ninja \
     && ninja install
 
@@ -442,7 +443,8 @@ RUN set -xe; \
 WORKDIR  ${HARFBUZZ_BUILD_DIR}/
 
 RUN set -xe; \
-    meson setup build \
+    pip3 install ninja meson \
+    && meson setup build \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
     && meson compile -C build -j9 \

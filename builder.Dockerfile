@@ -42,7 +42,7 @@ RUN set -xe; \
     curl -Ls https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf --output sample.pdf
 
 RUN set -xe; \
-    /opt/bin/pdftoppm -png sample.pdf sample
+    /opt/bin/pdftocairo -png sample.pdf sample
 
 RUN set -xe; \
     test -f /tmp/test/sample-1.png

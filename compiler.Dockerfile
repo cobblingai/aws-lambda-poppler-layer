@@ -43,6 +43,7 @@ RUN set -xe \
     python3-mako \
     python3-markdown \
     meson \
+    ninja-build \
     python3 \
     gtk-doc \
     glib2-devel \
@@ -124,7 +125,7 @@ ENV LD_LIBRARY_PATH="${INSTALL_DIR}/lib64:${INSTALL_DIR}/lib"
 
 # Build LibXML2 (https://github.com/GNOME/libxml2/releases)
 
-ENV VERSION_XML2=2.9.12
+ENV VERSION_XML2=2.14.3
 ENV XML2_BUILD_DIR=${BUILD_DIR}/xml2
 
 RUN set -xe; \
@@ -148,7 +149,7 @@ RUN set -xe; \
     --with-html \
     --with-history \
     --enable-ipv6=no \
-    --with-icu \
+    # --with-icu \
     --with-zlib=${INSTALL_DIR} \
     --without-python
 
@@ -298,7 +299,7 @@ RUN set -xe; \
 
 # Install Libpng (https://github.com/glennrp/libpng/releases)
 
-ENV VERSION_LIBPNG=1.6.39
+ENV VERSION_LIBPNG=1.6.48
 ENV LIBPNG_BUILD_DIR=${BUILD_DIR}/libpng
 
 RUN set -xe; \
@@ -346,7 +347,7 @@ RUN set -xe; \
 
 # Install Pixman (https://www.cairographics.org/releases)
 
-ENV VERSION_PIXMAN=0.42.2
+ENV VERSION_PIXMAN=0.46.0
 ENV PIXMAN_BUILD_DIR=${BUILD_DIR}/pixman
 
 RUN set -xe; \
@@ -373,7 +374,7 @@ RUN set -xe; \
 
 # Install Cairo (http://www.linuxfromscratch.org/blfs/view/svn/x/cairo.html)
 
-ENV VERSION_CAIRO=1.17.6
+ENV VERSION_CAIRO=1.18.4
 ENV CAIRO_BUILD_DIR=${BUILD_DIR}/cairo
 
 RUN set -xe; \
@@ -381,7 +382,7 @@ RUN set -xe; \
     curl -Ls https://ftp.osuosl.org/pub/blfs/conglomeration/cairo/cairo-${VERSION_CAIRO}.tar.xz \
     | tar xJvC ${CAIRO_BUILD_DIR} --strip-components=1
 
-WORKDIR  ${CAIRO_BUILD_DIR}/
+WORKDIR  ${CAIRO_BUILD_DIR}/build
 
 RUN set -xe; \
     CFLAGS="" \
@@ -389,12 +390,16 @@ RUN set -xe; \
     # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
-    ./configure  \
-    --prefix=${INSTALL_DIR} \
-    --disable-static \
-    --enable-tee \
-    && make \
-    && make install
+    # ./configure  \
+    # --prefix=${INSTALL_DIR} \
+    # --disable-static \
+    # --enable-tee \
+    # && make \
+    # && make install
+    meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
+    && ninja \
+    && ninja install
+
 
 # Install Little CMS (https://downloads.sourceforge.net/lcms)
 
@@ -438,6 +443,31 @@ RUN set -xe; \
     --buildtype=release \
     && meson compile -C build -j9 \
     && meson install -C build
+
+# Install icu (https://github.com/unicode-org/icu/releases)
+
+ENV VERSION_ICU=67-1
+ENV ICU_BUILD_DIR=${BUILD_DIR}/icu
+
+RUN set -xe; \
+    mkdir -p ${ICU_BUILD_DIR}; \
+    curl -Ls https://github.com/unicode-org/icu/releases/download/release-${VERSION_ICU}/icu4c-${VERSION_ICU/-/_}-src.tgz \
+    | tar xzC ${ICU_BUILD_DIR} --strip-components=1
+
+WORKDIR ${ICU_BUILD_DIR}/source
+
+RUN set -xe; \
+    CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
+    LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
+    ./runConfigureICU Linux \
+    --enable-shared \
+    --disable-static \
+    # --prefix=${INSTALL_DIR}
+    --prefix=/usr/local
+
+RUN set -xe; \
+    make \
+    && make install
     
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 
@@ -468,6 +498,11 @@ RUN set -xe; \
     -DCMAKE_PREFIX_PATH=${INSTALL_DIR} \
     -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
     -DTESTDATADIR=${POPPLER_TEST_DIR} \
+    -DENABLE_NSS3=OFF \
+    -DENABLE_GPGME=OFF \
+    -DENABLE_QT5=OFF \
+    -DENABLE_QT6=OFF \
+    -DENABLE_LIBCURL=OFF \
     && make \
     && make install
 
@@ -493,29 +528,7 @@ RUN set -xe; \
     && make \
     && make install
 
-# Install icu (https://github.com/unicode-org/icu/releases)
 
-ENV VERSION_ICU=67-1
-ENV ICU_BUILD_DIR=${BUILD_DIR}/icu
-
-RUN set -xe; \
-    mkdir -p ${ICU_BUILD_DIR}; \
-    curl -Ls https://github.com/unicode-org/icu/releases/download/release-${VERSION_ICU}/icu4c-${VERSION_ICU/-/_}-src.tgz \
-    | tar xzC ${ICU_BUILD_DIR} --strip-components=1
-
-WORKDIR ${ICU_BUILD_DIR}/source
-
-RUN set -xe; \
-    CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
-    LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
-    ./runConfigureICU Linux \
-    --enable-shared \
-    --disable-static \
-    --prefix=${INSTALL_DIR}
-
-RUN set -xe; \
-    make \
-    && make install
 
 # Remove unnecessary files
 RUN rm -rf /opt/share/gtk-doc \

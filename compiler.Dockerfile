@@ -49,6 +49,7 @@ RUN set -xe \
     glib2-devel \
     libffi-devel \
     freetype-devel \
+    readline-devel \
     && dnf clean all && rm -rf /var/cache/dnf
 
 # Install CMake
@@ -130,8 +131,8 @@ ENV XML2_BUILD_DIR=${BUILD_DIR}/xml2
 
 RUN set -xe; \
     mkdir -p ${XML2_BUILD_DIR}; \
-    curl -Ls http://xmlsoft.org/sources/libxml2-${VERSION_XML2}.tar.gz \
-    | tar xzC ${XML2_BUILD_DIR} --strip-components=1
+    curl -Ls https://download.gnome.org/sources/libxml2/${VERSION_XML2%.*}/libxml2-${VERSION_XML2}.tar.xz \
+    | tar xJf - -C ${XML2_BUILD_DIR} --strip-components=1
 
 WORKDIR  ${XML2_BUILD_DIR}/
 
@@ -355,7 +356,7 @@ RUN set -xe; \
     curl -Ls https://www.cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz \
     | tar xzC ${PIXMAN_BUILD_DIR} --strip-components=1
 
-WORKDIR  ${PIXMAN_BUILD_DIR}/
+WORKDIR  ${PIXMAN_BUILD_DIR}/build
 
 RUN set -xe; \
     ls -al ${PIXMAN_BUILD_DIR}
@@ -366,11 +367,14 @@ RUN set -xe; \
     # CXX="/usr/bin/gcc10-c++" \
     CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
     LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
-    ./configure  \
-    --prefix=${INSTALL_DIR} \
-    --disable-static \
-    && make \
-    && make install
+    # ./configure  \
+    # --prefix=${INSTALL_DIR} \
+    # --disable-static \
+    # && make \
+    # && make install
+    meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
+    && ninja \
+    && ninja install
 
 # Install Cairo (http://www.linuxfromscratch.org/blfs/view/svn/x/cairo.html)
 

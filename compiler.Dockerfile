@@ -87,7 +87,7 @@ RUN  set -xe \
 RUN set -xe \
     && mkdir -p /tmp/boost \
     && cd /tmp/boost \
-    && curl -Ls https://archives.boost.io/release/1.87.0/source/boost_1_88_0.tar.gz \
+    && curl -Ls https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz \
     | tar xzC /tmp/boost --strip-components=1 \
     && ./bootstrap.sh \
     --prefix=${INSTALL_DIR} \

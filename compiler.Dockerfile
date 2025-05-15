@@ -433,13 +433,10 @@ RUN set -xe; \
 WORKDIR  ${HARFBUZZ_BUILD_DIR}/
 
 RUN set -xe; \
-    pip3 install ninja meson \
-    && meson setup \
+    meson setup \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
-    .. \
-    && ninja \
-    && ninja install
+    && meson compile -C build -j9
     
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 

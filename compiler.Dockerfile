@@ -76,7 +76,7 @@ RUN  set -xe \
     | tar xJvC /tmp/gobject-introspection --strip-components=1 \
     && mkdir build \
     && cd build \
-    && pip3 install ninja meson \
+    && pip3 install meson \
     && meson setup \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
@@ -371,7 +371,7 @@ RUN set -xe; \
     # --disable-static \
     # && make \
     # && make install
-    pip3 install ninja meson \
+    pip3 install meson \
     && meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
     && ninja \
     && ninja install
@@ -400,8 +400,11 @@ RUN set -xe; \
     # --enable-tee \
     # && make \
     # && make install
-    pip3 install ninja meson \
-    && meson setup --prefix=${INSTALL_DIR} --buildtype=release .. \
+    pip3 install meson \
+    && meson setup \
+    --prefix=${INSTALL_DIR} \
+    --buildtype=release \
+    -Dx11=disabled .. \
     && ninja \
     && ninja install
 
@@ -443,7 +446,7 @@ RUN set -xe; \
 WORKDIR  ${HARFBUZZ_BUILD_DIR}/
 
 RUN set -xe; \
-    pip3 install ninja meson \
+    pip3 install meson \
     && meson setup build \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
@@ -474,7 +477,7 @@ RUN set -xe; \
 RUN set -xe; \
     make \
     && make install
-    
+
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 
 ENV VERSION_POPPLER=25.05.0

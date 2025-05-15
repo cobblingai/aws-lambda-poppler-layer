@@ -436,7 +436,8 @@ RUN set -xe; \
     meson setup build \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
-    && meson compile -Cbuild -j9
+    && meson compile -C build -j9 \
+    && meson install -C build
     
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 
@@ -468,6 +469,52 @@ RUN set -xe; \
     -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
     -DTESTDATADIR=${POPPLER_TEST_DIR} \
     && make \
+    && make install
+
+# Install brotli (https://github.com/google/brotli/releases)
+
+ENV VERSION_BROTLI=1.1.0
+ENV BROTLI_BUILD_DIR=${BUILD_DIR}/brotli
+
+RUN set -xe; \
+    mkdir -p ${BROTLI_BUILD_DIR}; \
+    curl -Ls https://github.com/google/brotli/archive/refs/tags/v${VERSION_BROTLI}.tar.gz \
+    | tar xzC ${BROTLI_BUILD_DIR} --strip-components=1
+
+WORKDIR ${BROTLI_BUILD_DIR}/out
+
+RUN set -xe; \
+    CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
+    LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
+    cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
+    -DCMAKE_PREFIX_PATH=${INSTALL_DIR} \
+    && make \
+    && make install
+
+# Install icu (https://github.com/unicode-org/icu/releases)
+
+ENV VERSION_ICU=67-1
+ENV ICU_BUILD_DIR=${BUILD_DIR}/icu
+
+RUN set -xe; \
+    mkdir -p ${ICU_BUILD_DIR}; \
+    curl -Ls https://github.com/unicode-org/icu/releases/download/release-${VERSION_ICU}/icu4c-${VERSION_ICU/-/_}-src.tgz \
+    | tar xzC ${ICU_BUILD_DIR} --strip-components=1
+
+WORKDIR ${ICU_BUILD_DIR}/source
+
+RUN set -xe; \
+    CPPFLAGS="-I${INSTALL_DIR}/include  -I/usr/include" \
+    LDFLAGS="-L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib" \
+    ./runConfigureICU Linux \
+    --enable-shared \
+    --disable-static \
+    --prefix=${INSTALL_DIR}
+
+RUN set -xe; \
+    make \
     && make install
 
 # Remove unnecessary files

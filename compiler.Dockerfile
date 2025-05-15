@@ -433,10 +433,10 @@ RUN set -xe; \
 WORKDIR  ${HARFBUZZ_BUILD_DIR}/
 
 RUN set -xe; \
-    meson setup \
+    meson setup build \
     --prefix=${INSTALL_DIR} \
     --buildtype=release \
-    && meson compile -C build -j9
+    && meson compile -Cbuild -j9
     
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 

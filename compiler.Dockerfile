@@ -5,6 +5,11 @@ SHELL ["/bin/bash", "-c"]
 ENV BUILD_DIR="/tmp/build"
 ENV INSTALL_DIR="/opt"
 
+# ENV PREFIX=/usr/local \
+#     BUILD_DIR=/tmp/build \
+#     PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig" \
+#     PATH="/usr/local/bin:${PATH}"
+
 # Create All The Necessary Build Directories
 
 RUN mkdir -p ${BUILD_DIR}  \
@@ -53,7 +58,7 @@ RUN  set -xe \
     | tar xzC /tmp/cmake --strip-components=1 \
     && sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake \
     && ./bootstrap \
-    --prefix=/usr/local \
+    --prefix=${INSTALL_DIR} \
     --no-system-jsoncpp \
     --no-system-librhash \
     --no-system-curl \
@@ -71,19 +76,11 @@ RUN  set -xe \
     && cd build \
     && pip3 install ninja meson \
     && meson setup \
-    --prefix=/usr/local \
+    --prefix=${INSTALL_DIR} \
     --buildtype=release \
     .. \
     && ninja \
     && ninja install
-
-# … after ninja install for G-I …
-RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/usr_local_lib.conf \
- && ldconfig
-
-# ensure pkg-config and CMake can find /usr/local installs
-ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/lib64/pkgconfig:$PKG_CONFIG_PATH" \
-    CMAKE_PREFIX_PATH="/usr/local:${INSTALL_DIR}"
 
 # Install Boost (https://github.com/boostorg/boost)
 
@@ -93,7 +90,7 @@ RUN set -xe \
     && curl -Ls https://archives.boost.io/release/1.87.0/source/boost_1_88_0.tar.gz \
     | tar xzC /tmp/boost --strip-components=1 \
     && ./bootstrap.sh \
-    --prefix=/usr/local \
+    --prefix=${INSTALL_DIR} \
     --with-python=python3 \
     && ./b2 headers \
     && ./b2 stage -j8 \
@@ -112,7 +109,7 @@ RUN set -xe \
     && cd /tmp/nasm \
     && curl -Ls  https://www.nasm.us/pub/nasm/releasebuilds/${VERSION_NASM}/nasm-${VERSION_NASM}.tar.xz \
     | tar xJvC /tmp/nasm --strip-components=1 \
-    && ./configure --prefix=/usr/local \
+    && ./configure --prefix=${INSTALL_DIR} \
     && make \
     && make install
 

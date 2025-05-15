@@ -38,8 +38,8 @@ RUN set -xe \
     pkgconfig \
     flex \
     bison \
-    cairo-devel \
-    cairo-gobject-devel \
+    # cairo-devel \
+    # cairo-gobject-devel \
     python3-mako \
     python3-markdown \
     ninja-build \
@@ -49,23 +49,24 @@ RUN set -xe \
     libffi-devel \
     freetype-devel \
     readline-devel \
+    cmake \
     && dnf clean all && rm -rf /var/cache/dnf
 
 # Install CMake
 
-RUN  set -xe \
-    && mkdir -p /tmp/cmake \
-    && cd /tmp/cmake \
-    && curl -Ls  https://cmake.org/files/v3.26/cmake-3.26.4.tar.gz \
-    | tar xzC /tmp/cmake --strip-components=1 \
-    && sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake \
-    && ./bootstrap \
-    --prefix=/usr/local \
-    --no-system-jsoncpp \
-    --no-system-librhash \
-    --no-system-curl \
-    && make \
-    && make install
+# RUN  set -xe \
+#     && mkdir -p /tmp/cmake \
+#     && cd /tmp/cmake \
+#     && curl -Ls  https://cmake.org/files/v3.26/cmake-3.26.4.tar.gz \
+#     | tar xzC /tmp/cmake --strip-components=1 \
+#     && sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake \
+#     && ./bootstrap \
+#     --prefix=/usr/local \
+#     --no-system-jsoncpp \
+#     --no-system-librhash \
+#     --no-system-curl \
+#     && make \
+#     && make install
 
 # Install GObject Introspection
 
@@ -403,8 +404,7 @@ RUN set -xe; \
     pip3 install meson \
     && meson setup \
     --prefix=${INSTALL_DIR} \
-    --buildtype=release \
-    -Dx11=disabled .. \
+    --buildtype=release -Dxlib-xcb=disabled .. \
     && ninja \
     && ninja install
 
@@ -536,8 +536,6 @@ RUN set -xe; \
     -DCMAKE_PREFIX_PATH=${INSTALL_DIR} \
     && make \
     && make install
-
-
 
 # Remove unnecessary files
 RUN rm -rf /opt/share/gtk-doc \

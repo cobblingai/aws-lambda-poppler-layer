@@ -47,6 +47,7 @@ RUN set -xe \
     gtk-doc \
     glib2-devel \
     libffi-devel \
+    freetype-devel \
     && dnf clean all && rm -rf /var/cache/dnf
 
 # Install CMake
@@ -419,6 +420,26 @@ RUN set -xe; \
     && make \
     && make install
 
+# Install harfbuzz (https://github.com/harfbuzz/harfbuzz/releases)
+
+ENV VERSION_HARFBUZZ=11.2.1
+ENV HARFBUZZ_BUILD_DIR=${BUILD_DIR}/harfbuzz
+
+RUN set -xe; \
+    mkdir -p ${HARFBUZZ_BUILD_DIR}; \
+    curl -Ls "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${VERSION_HARFBUZZ}.tar.gz" \
+    | tar xzC ${HARFBUZZ_BUILD_DIR} --strip-components=1
+
+WORKDIR  ${HARFBUZZ_BUILD_DIR}/
+
+RUN set -xe; \
+    meson setup \
+    --prefix=${INSTALL_DIR} \
+    --buildtype=release \
+    .. \
+    && ninja \
+    && ninja install
+    
 # Install Poppler (https://gitlab.freedesktop.org/poppler/poppler/-/tags)
 
 ENV VERSION_POPPLER=23.06.0

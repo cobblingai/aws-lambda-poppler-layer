@@ -1,4 +1,4 @@
-FROM amazonlinux:2
+FROM amazonlinux:2023
 
 ENV SOURCE_DIR="/opt"
 ENV INSTALL_DIR="/opt"
@@ -9,7 +9,7 @@ ENV PATH="/opt/bin:${PATH}" \
 # Install zip
 
 RUN set -xe; \
-    LD_LIBRARY_PATH= yum -y install zip
+    LD_LIBRARY_PATH= dnf -y install zip
 
 # Copy All Binaries / Libaries
 
